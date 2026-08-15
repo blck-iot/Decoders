@@ -9,24 +9,24 @@ network.
 ## Structure
 
 ```
-<Network>/<vendor>/<Device>_<Network>_BLCK.js
+blck-signed/<Network>/<Manufacturer>/<Device>_<Network>_BLCK.js
 ```
 
-One folder per supported network:
+One folder per supported network under `blck-signed/`:
 
 - `Actility/` — ThingPark
 - `ChirpStack/` — ChirpStack v3/v4
 - `TTN/` — The Things Network / The Things Stack
 - `Helium/` — Helium Console
 
-Inside each, one subfolder per vendor (`dragino`, `sensecap`, `seeed`,
+Inside each, one subfolder per manufacturer (`dragino`, `sensecap`, `seeed`,
 `rakwireless`, `globalsat`, `senseair`, `qingping`, `vega`), and one file per
 device.
 
-A handful of devices also have a copy at the repo root or directly under a
-vendor folder (no network subfolder) — these are equivalent to their nested
-counterpart and kept for backward compatibility with existing integrations
-that already reference them directly.
+A handful of devices also have a copy directly under `blck-signed/` or
+`blck-signed/<manufacturer>/` (no network subfolder) — these are equivalent
+to their nested counterpart and kept for backward compatibility with
+existing integrations that already reference them directly.
 
 ## Using a decoder
 
