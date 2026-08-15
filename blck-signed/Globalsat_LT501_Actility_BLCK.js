@@ -85,7 +85,7 @@ function Decode(fPort, bytes) { return _decode(fPort, bytes); }
 // function Decoder(bytes, port) { return _decode(port, bytes); }
 
 // TTN v3 / ChirpStack v4
-// function decodeUplink(input) { return _decode(input.fPort, input.bytes); }
+function decodeUplink(input) { return _decode(input.fPort, input.bytes); }
 
 // ChirpStack v3
 // function Decode(fPort, bytes, variables) { return _decode(fPort, bytes); }
@@ -221,8 +221,8 @@ function _decode(fPort, bytes) {
     // Two distinct enumerations share this bit position depending on frame
     // kind, per GlobalSat's own Development Document v1.4 (2018-08-17,
     // MD5-verified against an independent GlobalSat-distributor mirror):
-    // Tracking/Beacon-tracking/Short-tracking frames use \u00a73.1.1's Report
-    // Type table; Help/Beacon-help/Short-help frames use \u00a73.1.2's separate
+    // Tracking/Beacon-tracking/Short-tracking frames use §3.1.1's Report
+    // Type table; Help/Beacon-help/Short-help frames use §3.1.2's separate
     // Alarm Type table (only code 1 = "Help Report" is documented there).
     // Code 14 does not appear in either official table -- previously
     // mislabeled as "Help (SOS)" here, which caused every real Help/SOS

@@ -18,7 +18,7 @@
  *
  * BLCK IoT — Signed Decoder
  * Device   : LTC2 - Temperature Transmitter
- * Network  : TTN v3 (source), pasteable to Actility/Helium/ChirpStack via stubs below
+ * Network  : TTN v3
  * Signed   : 2026-08-14
  *
  * ── Notes ─────────────────────────────────────────────────────────────────────
@@ -189,9 +189,9 @@ function _vendorDecodeUplink(input) {
     if (bytes[5] == 0x80 && bytes[6] == 0x01) {
       data.Temp_Channel2 = 'NULL';
     } else if (((bytes[5] << 8) | bytes[6]) >= 0xe4a8) {
-      data.Temp_Channel2 = parseFloat((((bytes[5] << 8) | bytes[6]) / 100).toFixed(2));
-    } else {
       data.Temp_Channel2 = parseFloat(((((bytes[5] << 24) >> 16) | bytes[6]) / 100).toFixed(2));
+    } else {
+      data.Temp_Channel2 = parseFloat((((bytes[5] << 8) | bytes[6]) / 100).toFixed(2));
     }
   } else if (Ext == 0x02) {
     data.Temp_Channel1 = parseFloat(((((bytes[3] << 24) >> 16) | bytes[4]) / 10).toFixed(1));
