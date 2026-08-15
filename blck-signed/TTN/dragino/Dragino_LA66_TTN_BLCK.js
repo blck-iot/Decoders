@@ -48,7 +48,10 @@ function hexToBytes(hex) {
 }
 
 // ── Network adapter ───────────────────────────────────────────────────────────
-// Uncomment exactly ONE entry for your network. All others must remain commented.
+// This file is pre-configured for TTN v3 / The Things Stack -- no action needed.
+// decodeUplink below is already the active entry point. The other networks' stubs
+// are shown commented for reference only -- do not uncomment them unless you are
+// deliberately repurposing this file for a different network.
 
 // Actility (ThingPark)
 // function Decode(fPort, bytes) { return _decode(fPort, bytes); }

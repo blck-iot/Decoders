@@ -57,7 +57,11 @@ function hexToBytes(hex) {
 }
 
 // ── Network adapter ───────────────────────────────────────────────────────────
-// Uncomment exactly ONE entry for your network. All others must remain commented.
+// This file is pre-configured for ChirpStack -- no action needed.
+// decodeUplink (v4 standard) and Decode (v3 / legacy name, kept for any integration
+// still calling it directly) are both already active below. The other networks'
+// stubs are shown commented for reference only -- do not uncomment them unless you
+// are deliberately repurposing this file for a different network.
 
 // Actility (ThingPark)
 // function Decode(fPort, bytes) { return _decode(fPort, bytes); }

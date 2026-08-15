@@ -37,7 +37,10 @@ function hexToBytes(hex) {
 }
 
 // ── Network adapter ───────────────────────────────────────────────────────────
-// Uncomment exactly ONE entry for your network. All others must remain commented.
+// This file is pre-configured for Helium Console -- no action needed.
+// Decoder below is already the active entry point. The other networks' stubs are
+// shown commented for reference only -- do not uncomment them unless you are
+// deliberately repurposing this file for a different network.
 
 // Actility (ThingPark)
 // function Decode(fPort, bytes) { return _decode({ fPort: fPort, bytes: bytes }); }
@@ -201,7 +204,7 @@ function getMyDate(str) {
   return c_Time;
 }
 
-function Decoder(bytes, port) {
+function _vendorDecoderByPort(bytes, port) {
   if (port == 0x03) {
     for (var i = 0; i < bytes.length; i = i + 11) {
       var data = datalog(i, bytes);
@@ -283,7 +286,7 @@ function Decoder(bytes, port) {
 
 function _vendorDecodeUplink(input) {
   return {
-    data: Decoder(input.bytes, input.fPort),
+    data: _vendorDecoderByPort(input.bytes, input.fPort),
   };
 }
 
