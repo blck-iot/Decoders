@@ -21,12 +21,9 @@ One folder per supported network under `blck-signed/`:
 
 Inside each, one subfolder per manufacturer (`dragino`, `sensecap`, `seeed`,
 `rakwireless`, `globalsat`, `senseair`, `qingping`, `vega`), and one file per
-device.
-
-A handful of devices also have a copy directly under `blck-signed/` or
-`blck-signed/<manufacturer>/` (no network subfolder) — these are equivalent
-to their nested counterpart and kept for backward compatibility with
-existing integrations that already reference them directly.
+device. Every file contains exactly the entry point its own network needs —
+nothing from the other three networks — so it matches what you'd expect
+from a decoder written specifically for your platform.
 
 ## Using a decoder
 
@@ -41,8 +38,8 @@ folder — no editing required:
 
 | Network | Entry point |
 |---|---|
-| Actility (ThingPark) | `decodeUplink(input)` (`Decode(fPort, bytes)` also defined, for existing integrations calling it directly) |
-| ChirpStack v4 | `decodeUplink(input)` (`Decode(fPort, bytes, variables)` also defined, for existing integrations calling it directly) |
+| Actility (ThingPark) | `decodeUplink(input)` |
+| ChirpStack v4 | `decodeUplink(input)` |
 | TTN / The Things Stack | `decodeUplink(input)` |
 | Helium Console | `Decoder(bytes, port)` |
 
