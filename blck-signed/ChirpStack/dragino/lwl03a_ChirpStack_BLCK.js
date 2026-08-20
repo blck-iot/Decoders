@@ -1,5 +1,5 @@
 /**
- * TTN v3 payload decoder for LWL03A - None-Position Rope Type Water Leak Controller
+ * ChirpStack v3/v4 payload decoder for LWL03A - None-Position Rope Type Water Leak Controller
  * @author       BLCK-IoT.com
  * @license      MIT
  * @version      1.0.0
@@ -37,23 +37,9 @@ function hexToBytes(hex) {
 }
 
 // ── Network adapter ───────────────────────────────────────────────────────────
-// This file is pre-configured for ChirpStack -- no action needed.
-// decodeUplink (v4 standard) and Decode (v3 / legacy name, kept for any integration
-// still calling it directly) are both already active below. The other networks'
-// stubs are shown commented for reference only -- do not uncomment them unless you
-// are deliberately repurposing this file for a different network.
+// This file is pre-configured for ChirpStack v3/v4 -- no action needed.
 
-// Actility (ThingPark)
-// function Decode(fPort, bytes) { return _decode({ fPort: fPort, bytes: bytes }); }
-
-// Helium Console
-// function Decoder(bytes, port) { return _decode({ fPort: port, bytes: bytes }); }
-
-// TTN v3 / ChirpStack v4
 function decodeUplink(input) { return _decode(input); }
-
-// ChirpStack v3
-function Decode(fPort, bytes, variables) { return _decode({ fPort: fPort, bytes: bytes }); }
 
 function _decode(input) {
 
@@ -205,7 +191,7 @@ function getMyDate(str) {
   return c_Time;
 }
 
-function Decoder(bytes, port) {
+function _vendorDecoderByPort(bytes, port) {
   if (port == 0x03) {
     for (var i = 0; i < bytes.length; i = i + 11) {
       var data = datalog(i, bytes);
@@ -287,7 +273,7 @@ function Decoder(bytes, port) {
 
 function _vendorDecodeUplink(input) {
   return {
-    data: Decoder(input.bytes, input.fPort),
+    data: _vendorDecoderByPort(input.bytes, input.fPort),
   };
 }
 

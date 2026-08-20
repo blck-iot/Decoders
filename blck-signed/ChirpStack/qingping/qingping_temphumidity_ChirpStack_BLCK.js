@@ -1,5 +1,5 @@
 /**
- * TTN v3 payload decoder for Qingping Temp & RH Monitor
+ * ChirpStack v3/v4 payload decoder for Qingping Temp & RH Monitor
  * @author       BLCK-IoT.com
  * @license      MIT
  * @version      1.0.0
@@ -37,23 +37,9 @@ function hexToBytes(hex) {
 }
 
 // ── Network adapter ───────────────────────────────────────────────────────────
-// This file is pre-configured for ChirpStack -- no action needed.
-// decodeUplink (v4 standard) and Decode (v3 / legacy name, kept for any integration
-// still calling it directly) are both already active below. The other networks'
-// stubs are shown commented for reference only -- do not uncomment them unless you
-// are deliberately repurposing this file for a different network.
+// This file is pre-configured for ChirpStack v3/v4 -- no action needed.
 
-// Actility (ThingPark)
-// function Decode(fPort, bytes) { return _decode({ fPort: fPort, bytes: bytes }); }
-
-// Helium Console
-// function Decoder(bytes, port) { return _decode({ fPort: port, bytes: bytes }); }
-
-// TTN v3 / ChirpStack v4
 function decodeUplink(input) { return _decode(input); }
-
-// ChirpStack v3
-function Decode(fPort, bytes, variables) { return _decode({ fPort: fPort, bytes: bytes }); }
 
 function _decode(input) {
 
@@ -201,16 +187,31 @@ function _vendorDecodeUplink(input) {
     decoded.temperature = temperature;
     decoded.humidity = humidity;
 
+    var pressureBytes = bytes.slice(11, 13);
+    var pressureValue = parseInt(bytesToHex(pressureBytes), 16);
+    decoded.pressure = pressureValue / 100;
+
     var battery = parseInt(bytes[13].toString(16), 16);
     decoded.battery = battery;
 
-    var versionCodeBytes = bytes.slice(14, 20);
+    // Version code and CRC boundaries are derived from dataLength (the LEN
+    // byte, per the manufacturer's own protocol spec: DATA occupies
+    // bytes[3 .. 3+dataLength), CRC is the 2 bytes immediately after) rather
+    // than hardcoded offsets -- keeps this correct for whatever real message
+    // length a given firmware/variant actually sends, instead of assuming
+    // one fixed total size.
+    var dataEnd = 3 + dataLength;
+    var versionCodeBytes = bytes.slice(14, Math.max(14, dataEnd));
     var versionCode = bytesToHex(versionCodeBytes);
     decoded.versionCode = versionCode;
 
-    var crcBytes = bytes.slice(20, 22);
+    var crcBytes = bytes.slice(dataEnd, dataEnd + 2);
     var crc = bytesToHex(crcBytes);
     decoded.crc = crc;
+
+    if (bytes.length !== dataEnd + 2) {
+      decoded.lengthMismatch = true;
+    }
   }
 
   return { data: decoded };
