@@ -1,5 +1,5 @@
 /**
- * Helium Console payload decoder for Dragino LA66 USB LoRaWAN Adapter — Vehicle Telemetry
+ * Actility (ThingPark) payload decoder for Dragino LA66 USB LoRaWAN Adapter — Vehicle Telemetry
  * @author       BLCK-IoT.com
  * @license      MIT
  * @version      1.0.0
@@ -49,22 +49,8 @@ function hexToBytes(hex) {
 
 // ── Network adapter ───────────────────────────────────────────────────────────
 // This file is pre-configured for Actility (ThingPark) -- no action needed.
-// decodeUplink (current platform standard) and Decode (legacy name, kept for any
-// integration still calling it directly) are both already active below. The other
-// networks' stubs are shown commented for reference only -- do not uncomment them
-// unless you are deliberately repurposing this file for a different network.
 
-// Actility (ThingPark)
-function Decode(fPort, bytes) { return _decode(fPort, bytes); }
-
-// Helium Console
-// function Decoder(bytes, port) { return _decode(port, bytes); }
-
-// TTN v3 / ChirpStack v4
 function decodeUplink(input) { return _decode(input.fPort, input.bytes); }
-
-// ChirpStack v3
-// function Decode(fPort, bytes, variables) { return _decode(fPort, bytes); }
 
 function _decode(fPort, bytes) {
 
