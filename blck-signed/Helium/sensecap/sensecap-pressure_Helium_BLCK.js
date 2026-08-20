@@ -1,5 +1,5 @@
 /**
- * TTN v3 payload decoder for Wireless Barometric Pressure Sensor - LoRaWAN®
+ * Helium Console payload decoder for Wireless Barometric Pressure Sensor - LoRaWAN®
  * @author       BLCK-IoT.com
  * @license      MIT
  * @version      1.0.0
@@ -38,21 +38,8 @@ function hexToBytes(hex) {
 
 // ── Network adapter ───────────────────────────────────────────────────────────
 // This file is pre-configured for Helium Console -- no action needed.
-// Decoder below is already the active entry point. The other networks' stubs are
-// shown commented for reference only -- do not uncomment them unless you are
-// deliberately repurposing this file for a different network.
 
-// Actility (ThingPark)
-// function Decode(fPort, bytes) { return _decode({ fPort: fPort, bytes: bytes }); }
-
-// Helium Console
 function Decoder(bytes, port) { return _decode({ fPort: port, bytes: bytes }); }
-
-// TTN v3 / ChirpStack v4
-// function decodeUplink(input) { return _decode(input); }
-
-// ChirpStack v3
-// function Decode(fPort, bytes, variables) { return _decode({ fPort: fPort, bytes: bytes }); }
 
 function _decode(input) {
 

@@ -1,5 +1,5 @@
 /**
- * Actility (ThingPark) payload decoder for SenseCAP S2120 8-in-1 Weather Station
+ * Helium Console payload decoder for SenseCAP S2120 8-in-1 Weather Station
  * @author       BLCK-IoT.com
  * @license      MIT
  * @version      2.2.0
@@ -77,21 +77,8 @@ function hexToBytes(hex) {
 
 // ── Network adapter ───────────────────────────────────────────────────────────
 // This file is pre-configured for Helium Console -- no action needed.
-// Decoder below is already the active entry point. The other networks' stubs are
-// shown commented for reference only -- do not uncomment them unless you are
-// deliberately repurposing this file for a different network.
 
-// Actility (ThingPark)
-// function Decode(fPort, bytes) { return _decode(fPort, bytes); }
-
-// Helium Console
 function Decoder(bytes, port) { return _decode(port, bytes); }
-
-// TTN v3 / ChirpStack v4
-// function decodeUplink(input) { return _decode(input.fPort, input.bytes); }
-
-// ChirpStack v3
-// function Decode(fPort, bytes, variables) { return _decode(fPort, bytes); }
 
 function _decode(fPort, bytes) {
 
