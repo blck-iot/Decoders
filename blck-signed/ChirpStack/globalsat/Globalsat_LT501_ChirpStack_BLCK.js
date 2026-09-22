@@ -44,6 +44,9 @@
  *   battery_pct        int      %     Battery level (0–100); absent in short frames
  *   timestamp          int      s     Unix UTC epoch; absent in short frames
  *   timestamp_iso      string   —     ISO-8601 UTC; absent in short frames
+ *   cmd_id              string   —     Command ID as hex (e.g. "0x1002") — standard/beacon frames only
+ *   cmd_id_confidence   string   —     'documented' (matches manufacturer spec) | 'inferred' (field-confirmed variant, not in the manufacturer's documented command-ID set)
+ *   extra_hex           string   —     Bytes beyond the documented frame length, if any — standard/help frames only
  *   beacon_type        string   —     BLE beacon format — beacon frames only
  *   beacon_id          string   —     40-char hex beacon identifier — beacon frames only
  *   ibeacon_uuid       string   —     UUID — iBeacon frames only
@@ -283,15 +286,31 @@ function _decode(fPort, bytes) {
 
         var cmdId = (bytes[1] << 8) | bytes[2];
 
-        if (cmdId === 0x1002 || cmdId === 0x0B00) {
+        // 0x2902 is not part of GlobalSat's documented command-ID set (dev
+        // doc v1.4, 2018) but has been confirmed in real production traffic
+        // from multiple LT-501 units to carry standard Tracking-report data
+        // using the same byte layout as 0x1002 -- verified by cross-checking
+        // the recovered timestamp against each frame's independently-logged
+        // network arrival time (matched to within ~2 seconds across separate
+        // captures from different devices). Treated as an alias for Tracking
+        // rather than merged silently into the 0x1002 branch, so
+        // cmd_id_confidence lets downstream consumers tell a spec-documented
+        // frame apart from this field-confirmed one -- and any other,
+        // still-unrecognized command ID keeps falling through to the
+        // 'Unrecognised 0x0C command' path below rather than being guessed at.
+        var isFieldConfirmedTracking = cmdId === 0x2902;
+
+        if (cmdId === 0x1002 || cmdId === 0x0B00 || isFieldConfirmedTracking) {
             if (bytes.length < 17) {
                 out.error   = 'Tracking/Help frame too short (need 17 bytes, got ' + bytes.length + ')';
                 out.raw_hex = _hexSlice(bytes, 0, bytes.length);
                 return _ret(out);
             }
-            out.frame_type = cmdId === 0x1002 ? 'Tracking' : 'Help';
+            out.frame_type        = cmdId === 0x0B00 ? 'Help' : 'Tracking';
+            out.cmd_id             = '0x' + ('0000' + cmdId.toString(16).toUpperCase()).slice(-4);
+            out.cmd_id_confidence  = isFieldConfirmedTracking ? 'inferred' : 'documented';
 
-            var gps = _parseGPS(bytes, 3, 7, 11, cmdId === 0x1002 ? _REPORT_TYPE : _ALARM_TYPE);
+            var gps = _parseGPS(bytes, 3, 7, 11, cmdId === 0x0B00 ? _ALARM_TYPE : _REPORT_TYPE);
             out.gps_fix       = gps.gps_fix;
             out.gps_valid     = gps.gps_valid;
             out.report_type   = gps.report_type;
@@ -306,6 +325,9 @@ function _decode(fPort, bytes) {
                 out.cached_latitude  = gps.latitude;
                 out.cached_longitude = gps.longitude;
             }
+            if (bytes.length > 17) {
+                out.extra_hex = _hexSlice(bytes, 17, bytes.length);
+            }
             return _ret(out);
         }
 
@@ -316,6 +338,8 @@ function _decode(fPort, bytes) {
                 return _ret(out);
             }
             out.frame_type = cmdId === 0x1302 ? 'Beacon tracking' : 'Beacon help';
+            out.cmd_id            = '0x' + ('0000' + cmdId.toString(16).toUpperCase()).slice(-4);
+            out.cmd_id_confidence = 'documented';
 
             var beaconStatusByte = bytes[23];
             var beaconTypeCode   = (beaconStatusByte >> 5) & 0x07;
