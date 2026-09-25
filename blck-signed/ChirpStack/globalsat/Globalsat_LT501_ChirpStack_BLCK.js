@@ -62,7 +62,10 @@
  *   decoder            string   —     'BLCK-IoT.com'
  *
  * ── Notes ─────────────────────────────────────────────────────────────────────
- *   Default FPort: 2 (AT param D7).
+ *   Default FPort: 2 (AT param D7), confirmed against real traffic
+ *   2026-09-25. Also field-confirmed AT-configured to FPort 3 on a separate
+ *   deployed fleet, 2026-09-22. Decoding keys off byte[0]/command ID only,
+ *   never FPort, so any AT-configured FPort decodes identically.
  *   FPort 4 / byte[0]=0xF2 is not an LT-501 protocol frame; returned as raw_hex
  *   with frame_type='Unknown (registration/heartbeat)'.
  *   No-fix frames: coordinates returned under cached_latitude / cached_longitude.
